@@ -7,7 +7,12 @@ The goal of the project is to collect tweets of a keyword, run a sentiment analy
 Therefore, a data pipeline using Docker-Compose was build to connect the tweet collection, the ETL job, the Slack Bot that posts the sentiments and the necessary databases.\
 
 ## Project Setup
-To run the data pipeline in one go, a multi-container Docker application with five Docker containers was set up. The tweet collector app is responsible for the collection and storage of the tweets in the second container which consists of a MongoDB database. The third container runs the ETL job app, which extracts data from one or more data sources, transforms the data by sentiment analysis and loads it into another data storage, a Postgres database (the fourth container). The Slack Bot posting the best and worst sentiments to a Slack channel is run in the fifth container.
+To run the data pipeline in one go, a multi-container Docker application with five Docker containers was set up. 
+* Container 1: Tweet collector app responsible for the collection and storage of the tweets in a database. 
+* Container 2: MongoDB database where the collected tweets are stored.
+* Container 3: ETL job app, which extracts data from one or more data sources, transforms the data by sentiment analysis and loads it into another data storage.
+* Container 4: Postgres database to store tweets with sentiment.
+* Container 5: The Slack Bot posting tweets with the best and worst sentiments to a Slack channel is run in the fifth container.
 
 ## Requirements
 * Docker: Install [Docker](https://docs.docker.com/). To get you started, this [Turorial](https://www.youtube.com/watch?v=YFl2mCHdv24&t=3s&ab_channel=JakeWright) by Jake Wright might help you.
@@ -17,7 +22,7 @@ To run the data pipeline in one go, a multi-container Docker application with fi
 The necessary Python packages are documented in the particular `requirements.txt` files in each subfolder. With running the script the necessary packages will be installed. All keys are stored as environment variables in the presented code due to privacy. I highly recommend this approach when sharing your code with others.
 
 ## Usage
-To run the data pipeline with all Docker containers and the corresponding databases and applications, enter the bash command `docker-compose up -d` in the folder where `docker-compose.yml` is stored to build, create and start the entire pipeline in the background.
+To run the data pipeline enter the bash command `docker-compose up -d` in the folder where `docker-compose.yml` is stored to build, create and start the entire pipeline in the background.
 
 ## Final notes
 Of course, you could get the same done with less machinery, but this project is built as a Data Engineering project and to get into the basics of Docker. There is also room for improvement in the sentiment analysis. The project was part of my [SPICED Data Science Bootcamp](https://www.spiced-academy.com/en/program/data-science).
