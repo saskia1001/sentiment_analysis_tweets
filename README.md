@@ -4,7 +4,7 @@ Data Pipeline
 
 ## Project Description
 The goal of the project is to collect tweets of a keyword, run a sentiment analysis and post the best and worst sentiment (for a given time interval) in a Slack channel.\
-Therefore, a data pipeline using Docker-Compose was build to connect the tweet collection, the ETL job, the Slack Bot that posts the sentiments and the necessary databases.\
+Therefore, a data pipeline using Docker-Compose was build to connect the tweet collection, the ETL job, the Slack Bot that posts the sentiments and the necessary databases.
 
 ## Project Setup
 To run the data pipeline in one go, a multi-container Docker application with five Docker containers was set up. 
