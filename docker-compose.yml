@@ -1,0 +1,64 @@
+# The docker-compose.yml is the file that defines the setup of the docker-compose pipeline
+version: '3'
+
+services:
+
+  # 1. Container
+  tweet_collector:
+    container_name: tweet_collector # the name of the actual docker container
+    build: tweet_collector/ # Creates the image from the Dockerfile in the directory ./tweet_collector
+    volumes: # links the local directory ./tweet_collector with the container directory /app and synchronizes them
+    - ./tweet_collector/:/app
+    environment: 
+    - API_KEY=${TWITTER_API_KEY}  
+    - API_SECRET=${TWITTER_API_SECRET}               
+    - ACCESS_TOKEN=${TWITTER_ACCESS_TOKEN}  
+    - ACCESS_TOKEN_SECRET=${TWITTER_ACCESS_TOKEN_SECRET}
+    depends_on:
+    - mongodb
+  
+  # 2. Container
+  mongodb:
+    container_name: mongodb
+    image: mongo
+    ports:
+    - 27017:27017
+  
+  # 3. Container: ETL-Job
+  etl_job:
+    container_name: etl_job
+    build: etl_job/
+    volumes:
+    - ./etl_job/:/app
+    depends_on:
+    - mongodb
+    - postgresdb
+    environment:
+    - POSTGRES_USER=${PGUSER}
+    - POSTGRES_PASSWORD=${PGPASSWORD}
+    - POSTGRES_DB=postgres
+
+  # 4. Container: postgres
+  postgresdb:
+    container_name: postgresdb
+    image: postgres
+    ports:
+    - "5555:5432"
+    environment:
+    - POSTGRES_USER=${PGUSER}
+    - POSTGRES_PASSWORD=${PGPASSWORD}
+    - POSTGRES_DB=postgres
+
+  # 5. Container: slackbot
+  slackbot:
+    container_name: slackbot
+    build: slack_bot/
+    volumes:
+    - ./slack_bot/:/app
+    depends_on:
+    - postgresdb
+    environment:
+    - WEBHOOK=${WEBHOOK_SLACK_SPICED}
+    - POSTGRES_USER=${PGUSER}
+    - POSTGRES_PASSWORD=${PGPASSWORD}
+    - POSTGRES_DB=postgres
